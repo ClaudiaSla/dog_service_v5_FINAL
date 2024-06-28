@@ -1,0 +1,22 @@
+{
+  "name": "dog_service_v2",
+  "version": "1.0.0",
+  "description": "Servicio para Mascotas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "author": "dogs_proyecto",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.19.2",
+    "mysql2": "^3.10.1",
+    "nodemailer": "^6.9.13"
+  },
+  "devDependencies": {
+    "body-parser": "^1.20.2",
+    "nodemon": "^3.1.3"
+  }
+}

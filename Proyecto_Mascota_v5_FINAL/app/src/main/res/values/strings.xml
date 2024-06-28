@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Dogs Ubication</string>
+    <string-array name="estado_array">
+        <item>Seleccione</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>

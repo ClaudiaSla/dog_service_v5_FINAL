@@ -1,0 +1,262 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema perrosapp
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema perrosapp
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `perrosapp` DEFAULT CHARACTER SET utf8mb3 ;
+USE `perrosapp` ;
+
+-- -----------------------------------------------------
+-- Table `perrosapp`.`estado`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `perrosapp`.`estado` (
+  `id_estado` INT NOT NULL AUTO_INCREMENT,
+  `Estado` TINYINT NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id_estado`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `perrosapp`.`usuarios`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `perrosapp`.`usuarios` (
+  `id_usuarios` INT NOT NULL AUTO_INCREMENT,
+  `correo` VARCHAR(45) NOT NULL,
+  `nombre` VARCHAR(45) NOT NULL,
+  `apellido` VARCHAR(45) NOT NULL,
+  `contrasena` VARCHAR(100) NOT NULL,
+  `numero` VARCHAR(45) NOT NULL,
+  `token_restablecimiento` VARCHAR(255) NULL DEFAULT NULL,
+  `Estado_id_estado` INT NOT NULL,
+  PRIMARY KEY (`id_usuarios`),
+  INDEX `fk_Usuarios_Estado_idx` (`Estado_id_estado` ASC) VISIBLE,
+  CONSTRAINT `fk_Usuarios_Estado`
+    FOREIGN KEY (`Estado_id_estado`)
+    REFERENCES `perrosapp`.`estado` (`id_estado`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `perrosapp`.`publicacion`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `perrosapp`.`publicacion` (
+  `id_publicacion` INT NOT NULL AUTO_INCREMENT,
+  `publicacion_titulo` VARCHAR(45) NOT NULL,
+  `publicacion_descripcion` VARCHAR(255) NOT NULL,
+  `publicacion_fecha` DATE NOT NULL,
+  `Usuarios_id_usuarios` INT NOT NULL,
+  PRIMARY KEY (`id_publicacion`),
+  INDEX `fk_Publicacion_Usuarios1_idx` (`Usuarios_id_usuarios` ASC) VISIBLE,
+  CONSTRAINT `fk_Publicacion_Usuarios1`
+    FOREIGN KEY (`Usuarios_id_usuarios`)
+    REFERENCES `perrosapp`.`usuarios` (`id_usuarios`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `perrosapp`.`ubicacion`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `perrosapp`.`ubicacion` (
+  `ubicacion_id` INT NOT NULL AUTO_INCREMENT,
+  `ubicacion_longitud` VARCHAR(45) NULL DEFAULT NULL,
+  `ubicacion_latitud` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`ubicacion_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `perrosapp`.`adopcion`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `perrosapp`.`adopcion` (
+  `adopcion_id` INT NOT NULL AUTO_INCREMENT,
+  `adopcion_edad` VARCHAR(45) NOT NULL,
+  `adopcion_raza` VARCHAR(45) NOT NULL,
+  `adopcion_vacunas` VARCHAR(45) NOT NULL,
+  `adopcion_nombre` VARCHAR(45) NOT NULL,
+  `adopcion_lugar` VARCHAR(45) NOT NULL,
+  `Publicacion_id_publicacion` INT NOT NULL,
+  `Ubicacion_ubicacion_id` INT NOT NULL,
+  PRIMARY KEY (`adopcion_id`),
+  INDEX `fk_Adopcion_Publicacion1_idx` (`Publicacion_id_publicacion` ASC) VISIBLE,
+  INDEX `fk_Adopcion_Ubicacion1_idx` (`Ubicacion_ubicacion_id` ASC) VISIBLE,
+  CONSTRAINT `fk_Adopcion_Publicacion1`
+    FOREIGN KEY (`Publicacion_id_publicacion`)
+    REFERENCES `perrosapp`.`publicacion` (`id_publicacion`),
+  CONSTRAINT `fk_Adopcion_Ubicacion1`
+    FOREIGN KEY (`Ubicacion_ubicacion_id`)
+    REFERENCES `perrosapp`.`ubicacion` (`ubicacion_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `perrosapp`.`avistamiento`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `perrosapp`.`avistamiento` (
+  `avistamiento_id` INT NOT NULL AUTO_INCREMENT,
+  `avistamiento_fecha` DATE NOT NULL,
+  `avistamiento_lugar` VARCHAR(45) NOT NULL,
+  `Publicacion_id_publicacion` INT NOT NULL,
+  `Ubicacion_ubicacion_id` INT NOT NULL,
+  PRIMARY KEY (`avistamiento_id`),
+  INDEX `fk_Avistamiento_Publicacion1_idx` (`Publicacion_id_publicacion` ASC) VISIBLE,
+  INDEX `fk_Avistamiento_Ubicacion1_idx` (`Ubicacion_ubicacion_id` ASC) VISIBLE,
+  CONSTRAINT `fk_Avistamiento_Publicacion1`
+    FOREIGN KEY (`Publicacion_id_publicacion`)
+    REFERENCES `perrosapp`.`publicacion` (`id_publicacion`),
+  CONSTRAINT `fk_Avistamiento_Ubicacion1`
+    FOREIGN KEY (`Ubicacion_ubicacion_id`)
+    REFERENCES `perrosapp`.`ubicacion` (`ubicacion_id`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `perrosapp`.`comentarios`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `perrosapp`.`comentarios` (
+  `comentario_id` INT NOT NULL AUTO_INCREMENT,
+  `comentario_contenido` VARCHAR(255) NOT NULL,
+  `comentario_fecha` DATE NOT NULL,
+  `Usuarios_id_usuarios` INT NOT NULL,
+  `Publicacion_id_publicacion` INT NOT NULL,
+  PRIMARY KEY (`comentario_id`),
+  INDEX `fk_Comentarios_Usuarios1_idx` (`Usuarios_id_usuarios` ASC) VISIBLE,
+  INDEX `fk_Comentarios_Publicacion1_idx` (`Publicacion_id_publicacion` ASC) VISIBLE,
+  CONSTRAINT `fk_Comentarios_Publicacion1`
+    FOREIGN KEY (`Publicacion_id_publicacion`)
+    REFERENCES `perrosapp`.`publicacion` (`id_publicacion`),
+  CONSTRAINT `fk_Comentarios_Usuarios1`
+    FOREIGN KEY (`Usuarios_id_usuarios`)
+    REFERENCES `perrosapp`.`usuarios` (`id_usuarios`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `perrosapp`.`imagenes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `perrosapp`.`imagenes` (
+  `imagenes_id` INT NOT NULL AUTO_INCREMENT,
+  `imagenes_url` LONGBLOB NULL,
+  `Publicacion_id_publicacion` INT NOT NULL,
+  PRIMARY KEY (`imagenes_id`),
+  INDEX `fk_Imagenes_Publicacion1_idx` (`Publicacion_id_publicacion` ASC) VISIBLE,
+  CONSTRAINT `fk_Imagenes_Publicacion1`
+    FOREIGN KEY (`Publicacion_id_publicacion`)
+    REFERENCES `perrosapp`.`publicacion` (`id_publicacion`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `perrosapp`.`notificacion`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `perrosapp`.`notificacion` (
+  `notificacion_id` INT NOT NULL AUTO_INCREMENT,
+  `notificacion_texto` VARCHAR(255) NOT NULL,
+  `Usuarios_id_usuarios` INT NOT NULL,
+  `publicacion_id_publicacion` INT NOT NULL,
+  PRIMARY KEY (`notificacion_id`),
+  INDEX `fk_Notificacion_Usuarios1_idx` (`Usuarios_id_usuarios` ASC) VISIBLE,
+  INDEX `fk_notificacion_publicacion1_idx` (`publicacion_id_publicacion` ASC) VISIBLE,
+  CONSTRAINT `fk_Notificacion_Usuarios1`
+    FOREIGN KEY (`Usuarios_id_usuarios`)
+    REFERENCES `perrosapp`.`usuarios` (`id_usuarios`),
+  CONSTRAINT `fk_notificacion_publicacion1`
+    FOREIGN KEY (`publicacion_id_publicacion`)
+    REFERENCES `perrosapp`.`publicacion` (`id_publicacion`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `perrosapp`.`perdido`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `perrosapp`.`perdido` (
+  `perdido_id` INT NOT NULL AUTO_INCREMENT,
+  `perdido_fecha` DATE NOT NULL,
+  `perdido_lugar` VARCHAR(45) NOT NULL,
+  `perdido_contacto` VARCHAR(45) NOT NULL,
+  `Publicacion_id_publicacion` INT NOT NULL,
+  `Ubicacion_ubicacion_id` INT NOT NULL,
+  PRIMARY KEY (`perdido_id`),
+  INDEX `fk_Perdido_Publicacion1_idx` (`Publicacion_id_publicacion` ASC) VISIBLE,
+  INDEX `fk_Perdido_Ubicacion1_idx` (`Ubicacion_ubicacion_id` ASC) VISIBLE,
+  CONSTRAINT `fk_Perdido_Publicacion1`
+    FOREIGN KEY (`Publicacion_id_publicacion`)
+    REFERENCES `perrosapp`.`publicacion` (`id_publicacion`),
+  CONSTRAINT `fk_Perdido_Ubicacion1`
+    FOREIGN KEY (`Ubicacion_ubicacion_id`)
+    REFERENCES `perrosapp`.`ubicacion` (`ubicacion_id`))
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- Insertar un estado inicial
+INSERT INTO `perrosapp`.`Estado` (`id_estado`, `Estado`) VALUES (NULL, 1);
+INSERT INTO `perrosapp`.`Estado` (`id_estado`, `Estado`) VALUES (NULL, 0);
+-- Seleccionar todos los ESTADOS
+SELECT * FROM ESTADO;
+
+-- Insertar un usuario de prueba
+INSERT INTO `perrosapp`.`Usuarios` 
+(`id_usuarios`, `correo`, `nombre`, `apellido`, `contrasena`, `numero`, `token_restablecimiento`, `Estado_id_estado`) 
+VALUES (NULL, 'claudia2@gmail.com', 'claudia', 'lopez2', '$2a$10$34qL4In5WQveINzUNVUB1Oq9voIZqubskvoms9sk5WupHeLr7BY.C', '912454367', NULL, 1);
+
+-- Seleccionar todos los usuarios
+SELECT * FROM USUARIOS;
+
+-- Insertando un dato en la tabla `publicacion`
+INSERT INTO `perrosapp`.`publicacion` (`publicacion_titulo`, `publicacion_descripcion`, `publicacion_fecha`, `Usuarios_id_usuarios`)
+VALUES ('Titulo de prueba', 'Descripción de prueba', '2024-06-27', 1);
+
+-- Insertando un dato en la tabla `ubicacion`
+INSERT INTO `perrosapp`.`ubicacion` (`ubicacion_longitud`, `ubicacion_latitud`)
+VALUES ('-99.1332', '19.4326');
+
+-- Insertando un dato en la tabla `adopcion`
+INSERT INTO `perrosapp`.`adopcion` (`adopcion_edad`, `adopcion_raza`, `adopcion_vacunas`, `adopcion_nombre`, `adopcion_lugar`, `Publicacion_id_publicacion`, `Ubicacion_ubicacion_id`)
+VALUES (2, 'Labrador', 'Vacunas al día', 'Firulais', 'Ciudad de México', 1, 1);
+
+-- Insertando un dato en la tabla `avistamiento`
+INSERT INTO `perrosapp`.`avistamiento` (`avistamiento_fecha`, `avistamiento_lugar`, `Publicacion_id_publicacion`, `Ubicacion_ubicacion_id`)
+VALUES ('2024-06-27', 'Parque Central', 1, 1);
+
+-- Insertando un dato en la tabla `comentarios`
+INSERT INTO `perrosapp`.`comentarios` (`comentario_contenido`, `comentario_fecha`, `Usuarios_id_usuarios`, `Publicacion_id_publicacion`)
+VALUES ('Este es un comentario de prueba', '2024-06-27', 1, 1);
+
+-- Insertando un dato en la tabla `imagenes`
+INSERT INTO `perrosapp`.`imagenes` (`imagenes_url`, `Publicacion_id_publicacion`)
+VALUES (LOAD_FILE('/path/to/image.jpg'), 1);
+
+-- Insertando un dato en la tabla `notificacion`
+INSERT INTO `perrosapp`.`notificacion` (`notificacion_texto`, `Usuarios_id_usuarios`, `publicacion_id_publicacion`)
+VALUES ('Nueva notificación de prueba', 1, 1);
+
+-- Insertando un dato en la tabla `perdido`
+INSERT INTO `perrosapp`.`perdido` (`perdido_fecha`, `perdido_lugar`, `perdido_contacto`, `Publicacion_id_publicacion`, `Ubicacion_ubicacion_id`)
+VALUES ('2024-06-27', 'Parque', '555-1234', 1, 1);
+
+
+SELECT * FROM PUBLICACION;
+SELECT * FROM NOTIFICACION;
+SELECT * FROM AVISTAMIENTO;
+SELECT * FROM PERDIDO;
+SELECT * FROM ADOPCION;
+
+
+
+
+
+

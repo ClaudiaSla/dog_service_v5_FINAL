@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fondo"
+    tools:context=".tokenActivity">
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="214dp"
+        android:layout_height="195dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/perro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tokenInstructionText"
+        android:layout_width="272dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="28dp"
+        android:fontFamily="@font/estiloletra2"
+        android:text="Ingrese el TOKEN recibido en su correo electrónico:"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView9" />
+
+    <EditText
+        android:id="@+id/tokenEditText"
+        android:layout_width="296dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/caja"
+        android:ems="10"
+        android:hint="Ingrese Token"
+        android:inputType="text"
+        android:paddingStart="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.304"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tokenInstructionText" />
+
+    <Button
+        android:id="@+id/btnenviar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/btnregistro_background"
+        android:paddingStart="15sp"
+        android:paddingEnd="15sp"
+        android:text="Enviar Token"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tokenEditText" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,86 @@
+Comandos:
+
+ node --version
+
+1. npm init
+2. npm install express --save
+3. npm install mysql2 --save // MYSQL WORKBENCH 8.0
+   npm install mysql --save // MYSQL UNIVERSIDAD
+4. npm install body-parser --save-dev
+5. npm install bcryptjs  // ENCRIPTAR CONTRASEÑA
+6. npm install nodemon --save-dev
+7. npm install nodemailer  // ENVIO DE CORREO 
+7. npm run dev
+
+INSERT INTO usuarios VALUES (null, "Juan Perez", "juan@correo.com");
+INSERT INTO usuarios VALUES (null, "Maria Avalos", "maria@correo.com");
+INSERT INTO usuarios VALUES (null, "Pedro Chavez", "pedro@correo.com");
+INSERT INTO usuarios VALUES (null, "Camila Corzo", "camila@correo.com");
+
+
+INSERT INTO roles VALUES (null, "Supervisor", "01");
+INSERT INTO roles VALUES (null, "Administrador", "02");
+INSERT INTO roles VALUES (null, "Gerente", "03");
+INSERT INTO roles VALUES (null, "Lider", "04");
+
+
+
+const express = require("express")
+const mysql = require("mysql")
+const bodyParser = require("body-parser")
+const req = require("express/lib/request")
+const res = require("express/lib/response")
+
+const app = express()
+app.use(bodyParser.json())
+
+const PUERTO = 3000
+
+const conexion = mysql.createConnection(
+    {
+        host:'localhost',
+        database:'servicios_web',
+        user:'root',
+        password:''
+    }
+)
+app.listen(PUERTO, ()=>{
+    console.log("SERVIDOR CORRIENDO EN EL PUERTO "+PUERTO)
+})
+conexion.connect(error =>{
+    if(error) throw error
+    console.log("Conexion a base de datos exitosa")
+})
+
+app.get("/",(req, res) =>{
+    res.send("Servicio Corriendo")
+})
+
+app.get("/usuarios",(req, res) =>{
+    const query = "SELECT * FROM usuarios;"
+    conexion.query(query, (error,resultado) =>{
+        if(error) return console.error(error.message)
+            const objeto ={}
+            if (resultado.length > 0){
+                objeto.listaUsuarios = resultado
+                res.json(objeto)
+            }else{
+                res.json("No hay Registros")
+            }
+
+    })
+})
+app.get("/roles",(req, res) =>{
+    const query = "SELECT * FROM roles;"
+    conexion.query(query, (error,resultado) =>{
+        if(error) return console.error(error.message)
+            const objeto ={}
+            if (resultado.length > 0){
+                objeto.listaRoles = resultado
+                res.json(objeto)
+            }else{
+                res.json("No hay Registros")
+            }
+
+    })
+})
